@@ -1,39 +1,48 @@
 import { useState } from "react";
 
-function TaskForm({ tasks, setTasks }) {
+function TaskForm({ setTasks }) {
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [dueTime, setDueTime] = useState("12:00"); // ✅ time input
+  const [dueTime, setDueTime] = useState("12:00");
   const [priority, setPriority] = useState("low");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ combine date + time
+    const user = JSON.parse(localStorage.getItem("user"));
+
     const combinedDateTime = new Date(`${dueDate}T${dueTime}`);
 
     const newTask = {
       title,
-      dueDate: combinedDateTime.toISOString(), // 🔥 send to Spring Boot
+      dueDate: combinedDateTime.toISOString().slice(0, 19),
       priority,
       status: "pending",
     };
 
-    fetch("http://localhost:8080/api/tasks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newTask),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setTasks([...tasks, data]);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-        setTasks([...tasks, { ...newTask, id: Date.now() }]);
-      });
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/tasks/${user.id}`, // ✅ correct API
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newTask),
+        }
+      );
+
+      if (!res.ok) throw new Error();
+
+      const data = await res.json();
+
+      // ✅ Add real DB task
+      setTasks((prev) => [...prev, data]);
+
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Task creation failed");
+    }
 
     setTitle("");
     setDueDate("");
@@ -51,7 +60,6 @@ function TaskForm({ tasks, setTasks }) {
         required
       />
 
-      {/* DATE */}
       <input
         type="date"
         value={dueDate}
@@ -59,7 +67,6 @@ function TaskForm({ tasks, setTasks }) {
         required
       />
 
-      {/* TIME (NEW) */}
       <input
         type="time"
         value={dueTime}
@@ -67,7 +74,10 @@ function TaskForm({ tasks, setTasks }) {
         required
       />
 
-      <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+      <select
+        value={priority}
+        onChange={(e) => setPriority(e.target.value)}
+      >
         <option value="low">Low</option>
         <option value="medium">Medium</option>
         <option value="high">High</option>

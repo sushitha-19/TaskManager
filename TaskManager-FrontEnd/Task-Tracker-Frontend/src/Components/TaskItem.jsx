@@ -1,31 +1,47 @@
 function TaskItem({ task, onDelete, onMarkDone }) {
+  // ✅ HARD SAFETY CHECK
+  if (!task || typeof task !== "object") return null;
+
+  const status = task.status || "pending";
+  const priority = task.priority || "low";
+
+  // ✅ SAFE DATE HANDLING
+  let formattedDate = "No deadline";
+
+  if (task.dueDate) {
+    const dateObj = new Date(task.dueDate);
+
+    if (!isNaN(dateObj.getTime())) {
+      formattedDate = dateObj.toLocaleString("en-IN", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
+    }
+  }
+
   return (
-    <div className={`task-card ${task.status}`}>
+    <div className={`task-card ${status}`}>
 
       <div className="task-header">
-        <h3>{task.title}</h3>
+        <h3>{task.title || "Untitled Task"}</h3>
 
-        <span className={`badge ${task.status}`}>
-          {task.status.toUpperCase()}
+        <span className={`badge ${status}`}>
+          {status.toUpperCase()}
         </span>
       </div>
 
-      {/* ✅ CLEAN DATE + TIME FORMAT */}
       <p>
-        <strong>Deadline:</strong>{" "}
-        {new Date(task.dueDate).toLocaleString("en-IN", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        })}
+        <strong>Deadline:</strong> {formattedDate}
       </p>
 
-      <p className={`priority ${task.priority}`}>
-        {task.priority} Priority
+      <p className={`priority ${priority}`}>
+        {priority} Priority
       </p>
 
       <div className="btn-group">
-        {task.status === "pending" ? (
-          <button onClick={() => onMarkDone(task.id)}>
+
+        {status === "pending" ? (
+          <button onClick={() => onMarkDone?.(task.id)}>
             Mark Done
           </button>
         ) : (
@@ -34,11 +50,14 @@ function TaskItem({ task, onDelete, onMarkDone }) {
           </button>
         )}
 
-        <button className="delete" onClick={() => onDelete(task.id)}>
+        <button
+          className="delete"
+          onClick={() => onDelete?.(task.id)}
+        >
           Delete
         </button>
-      </div>
 
+      </div>
     </div>
   );
 }

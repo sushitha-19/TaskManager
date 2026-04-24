@@ -33,13 +33,14 @@ h1 {
 }
 
 /* FORM */
-form {
+/*form {
   display: flex;
   justify-content: center;
   gap: 10px;
   margin: 20px 0;
-  flex-wrap: wrap; /* responsive */
-}
+  flex-wrap: wrap; 
+ }*/
+
 
 input, select {
   padding: 8px;
@@ -202,4 +203,100 @@ button:hover {
 /* Optional: smoother transition */
 button {
   transition: all 0.3s ease;
+}
+.center-box {
+  text-align: center;
+  margin-top: 100px;
+  background-color: white;
+  padding: 30px;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 1;
+}
+
+/* ✅ FIX: Make task title BLACK */
+.task-card h3 {
+  color: black !important;
+}
+
+/* ✅ FIX: Make ALL text inside task-card default black */
+.task-card p {
+  color: black;
+}
+
+/* Optional: keep priority colors as you already have */
+.priority.high {
+  color: red;
+}
+
+.priority.medium {
+  color: goldenrod;
+}
+
+.priority.low {
+  color: green;
+}
+
+/* ✅ TASK FORM ONLY (if you have task form) */
+.task-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ✅ LOGIN + SIGNUP FIX */
+.center-box form {
+  display: flex;
+  flex-direction: column;   /* 👈 KEY FIX */
+  gap: 12px;
+  align-items: stretch;
+}
+
+/* inputs full width */
+.center-box input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* buttons full width */
+.center-box button {
+  width: 100%;
+}
+/* ✅ AUTH LINKS (Signup + Forgot Password) */
+.auth-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+/* remove button look completely */
+.auth-links span {
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* hover effect */
+.auth-links span:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+/* Signup page specific fix */
+.center-box .auth-links {
+  display: flex;
+  justify-content: center;   /* centers horizontally */
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.center-box .auth-links span {
+  text-align: center;
 }

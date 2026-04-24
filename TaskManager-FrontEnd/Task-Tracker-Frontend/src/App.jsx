@@ -1,93 +1,116 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./App.css";
+
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
+import ForgotPassword from "./components/ForgotPassword"; // ✅ NEW
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState("all"); // 🔥 NEW
+  const [filter, setFilter] = useState("all");
 
-  // 🔥 Fetch tasks from backend
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("user") !== null
+  );
+
   useEffect(() => {
-    fetch("http://localhost:8080/api/tasks")
-      .then((res) => res.json())
-      .then((data) => setTasks(data))
-      .catch((err) => {
-        console.error("Fetch error:", err);
-      });
-  }, []);
+    if (isLoggedIn) {
+      const user = JSON.parse(localStorage.getItem("user"));
 
-  // 🔥 Mark Done
+      fetch(`http://localhost:8080/api/tasks/${user.id}`)
+        .then((res) => {
+          if (!res.ok) throw new Error();
+          return res.json();
+        })
+        .then((data) => {
+          setTasks(data);
+        })
+        .catch((err) => {
+          console.error(err);
+          setTasks([]);
+        });
+    }
+  }, [isLoggedIn]);
+
   const handleMarkDone = (id) => {
     fetch(`http://localhost:8080/api/tasks/${id}/done`, {
       method: "PUT",
-    })
-      .then(() => {
-        setTasks(
-          tasks.map((task) =>
-            task.id === id ? { ...task, status: "done" } : task
-          )
-        );
-      })
-      .catch((err) => console.error("Mark done error:", err));
+    }).then(() => {
+      setTasks((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, status: "done" } : t))
+      );
+    });
   };
 
-  // 🔥 Delete Task
   const handleDelete = (id) => {
     fetch(`http://localhost:8080/api/tasks/${id}`, {
       method: "DELETE",
-    })
-      .then(() => {
-        setTasks(tasks.filter((task) => task.id !== id));
-      })
-      .catch((err) => console.error("Delete error:", err));
+    }).then(() => {
+      setTasks((prev) => prev.filter((t) => t.id !== id));
+    });
   };
 
-  // 🔥 FILTER LOGIC
   const filteredTasks = tasks.filter((task) => {
     if (filter === "pending") return task.status === "pending";
     if (filter === "done") return task.status === "done";
-    return true; // all
+    return true;
   });
 
   return (
-    <div className="app-container">
-      <h1 className="app-title">Task Tracker 🚀</h1>
+    <BrowserRouter>
+      <Routes>
 
-      <TaskForm tasks={tasks} setTasks={setTasks} />
+        <Route
+          path="/"
+          element={<Login setIsLoggedIn={setIsLoggedIn} />}
+        />
 
-      {/* 🔥 FILTER BUTTONS */}
-      <div style={{ textAlign: "center", margin: "15px" }}>
-  <button
-    className={filter === "all" ? "active-filter" : ""}
-    onClick={() => setFilter("all")}
-  >
-    All
-  </button>
+        <Route path="/signup" element={<Signup />} />
 
-  <button
-    className={filter === "pending" ? "active-filter" : ""}
-    onClick={() => setFilter("pending")}
-    style={{ marginLeft: "10px" }}
-  >
-    Pending
-  </button>
+        {/* ✅ NEW ROUTE */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-  <button
-    className={filter === "done" ? "active-filter" : ""}
-    onClick={() => setFilter("done")}
-    style={{ marginLeft: "10px" }}
-  >
-    Done
-  </button>
-</div>
+        <Route
+          path="/tasks"
+          element={
+            isLoggedIn ? (
+              <div className="app-container">
+                <h1>Task Tracker 🚀</h1>
 
-      <TaskList
-        tasks={filteredTasks} // 🔥 PASS FILTERED TASKS
-        onDelete={handleDelete}
-        onMarkDone={handleMarkDone}
-      />
-    </div>
+                <TaskForm setTasks={setTasks} />
+
+                <div style={{ margin: "15px" }}>
+                  <button onClick={() => setFilter("all")}>All</button>
+                  <button onClick={() => setFilter("pending")}>Pending</button>
+                  <button onClick={() => setFilter("done")}>Done</button>
+                </div>
+
+                <TaskList
+                  tasks={filteredTasks}
+                  onDelete={handleDelete}
+                  onMarkDone={handleMarkDone}
+                />
+
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("user");
+                    setIsLoggedIn(false);
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
