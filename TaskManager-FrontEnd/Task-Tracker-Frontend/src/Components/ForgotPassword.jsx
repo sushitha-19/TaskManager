@@ -46,12 +46,11 @@ function ForgotPassword() {
           required
         />
 
-        {/* ✅ ONLY ONE MAIN ACTION BUTTON */}
         <button type="submit">Reset Password</button>
       </form>
 
-      {/* ✅ SIDE-BY-SIDE LINKS */}
-      <div className="auth-links">
+      {/* ✅ UPDATED */}
+      <div className="auth-links login-links">
         <span onClick={() => navigate("/")}>
           Back to Login
         </span>

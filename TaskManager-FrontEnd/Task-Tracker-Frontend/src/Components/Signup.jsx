@@ -18,13 +18,15 @@ function Signup() {
         body: JSON.stringify({ name, email, password })
       });
 
-      if (!res.ok) throw new Error();
+      const message = await res.text(); // ✅ important
 
-      alert("Signup successful!");
+      if (!res.ok) throw new Error(message);
+
+      alert(message); // "Please verify your email"
       navigate("/");
 
-    } catch {
-      alert("Signup failed");
+    } catch (err) {
+      alert(err.message || "Signup failed");
     }
   };
 
@@ -57,7 +59,6 @@ function Signup() {
         <button type="submit">Signup</button>
       </form>
 
-      {/* ✅ Text links instead of buttons */}
       <div className="auth-links">
         <span onClick={() => navigate("/")}>
           Back to Login

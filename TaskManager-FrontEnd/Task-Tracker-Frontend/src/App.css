@@ -289,14 +289,16 @@ button {
   color: #0056b3;
 }
 /* Signup page specific fix */
-.center-box .auth-links {
+/* DEFAULT (used by signup - center aligned) */
+.auth-links {
   display: flex;
-  justify-content: center;   /* centers horizontally */
-  align-items: center;
-  width: 100%;
+  justify-content: center;
   margin-top: 15px;
 }
 
-.center-box .auth-links span {
-  text-align: center;
+/* ✅ ONLY for Login & Forgot pages */
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }

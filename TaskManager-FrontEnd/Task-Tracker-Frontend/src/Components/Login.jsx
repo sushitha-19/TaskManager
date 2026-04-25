@@ -17,17 +17,19 @@ function Login({ setIsLoggedIn }) {
         body: JSON.stringify({ email, password })
       });
 
-      if (!res.ok) throw new Error();
+      const text = await res.text();
 
-      const data = await res.json();
+      if (!res.ok) throw new Error(text);
+
+      const data = JSON.parse(text);
 
       localStorage.setItem("user", JSON.stringify(data));
       setIsLoggedIn(true);
 
       navigate("/tasks");
 
-    } catch {
-      alert("Login failed");
+    } catch (err) {
+      alert(err.message);
     }
   };
 
@@ -55,8 +57,8 @@ function Login({ setIsLoggedIn }) {
         <button type="submit">Login</button>
       </form>
 
-      {/* ✅ NEW CLEAN LINKS */}
-      <div className="auth-links">
+      {/* ✅ UPDATED */}
+      <div className="auth-links login-links">
         <span onClick={() => navigate("/signup")}>
           Signup
         </span>

@@ -6,7 +6,8 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
-import ForgotPassword from "./components/ForgotPassword"; // ✅ NEW
+import ForgotPassword from "./components/ForgotPassword";
+import Verify from "./components/Verify"; // ✅ NEW
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -63,16 +64,22 @@ function App() {
     <BrowserRouter>
       <Routes>
 
+        {/* LOGIN */}
         <Route
           path="/"
           element={<Login setIsLoggedIn={setIsLoggedIn} />}
         />
 
+        {/* SIGNUP */}
         <Route path="/signup" element={<Signup />} />
 
-        {/* ✅ NEW ROUTE */}
+        {/* FORGOT PASSWORD */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
+        {/* ✅ EMAIL VERIFICATION ROUTE */}
+        <Route path="/verify" element={<Verify />} />
+
+        {/* TASK PAGE */}
         <Route
           path="/tasks"
           element={
