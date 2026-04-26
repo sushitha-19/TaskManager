@@ -21,10 +21,16 @@ public class TaskController {
         return service.getTasksByUser(userId);
     }
 
-    // ✅ CREATE TASK FOR USER
+    // ✅ CREATE TASK
     @PostMapping("/{userId}")
     public Task createTask(@PathVariable Long userId, @RequestBody Task task) {
         return service.addTask(userId, task);
+    }
+
+    // ✅ UPDATE TASK (🔥 NEW)
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
+        return service.updateTask(id, task);
     }
 
     // ✅ MARK DONE

@@ -1,6 +1,6 @@
 import TaskItem from "./TaskItem";
 
-function TaskList({ tasks, onDelete, onMarkDone }) {
+function TaskList({ tasks, onDelete, onMarkDone, onEdit }) {
   // ✅ SAFETY: prevent undefined crash
   const safeTasks = Array.isArray(tasks) ? tasks : [];
 
@@ -15,6 +15,7 @@ function TaskList({ tasks, onDelete, onMarkDone }) {
             task={task}
             onDelete={onDelete}
             onMarkDone={onMarkDone}
+            onEdit={onEdit}   // ✅ ADDED
           />
         ))
       )}

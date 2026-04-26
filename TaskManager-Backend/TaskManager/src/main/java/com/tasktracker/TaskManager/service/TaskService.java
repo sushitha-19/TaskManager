@@ -23,7 +23,7 @@ public class TaskService {
         return taskRepo.findByUserId(userId);
     }
 
-    // ✅ ADD TASK WITH USER
+    // ✅ ADD TASK
     public Task addTask(Long userId, Task task) {
 
         User user = userRepo.findById(userId)
@@ -31,9 +31,19 @@ public class TaskService {
 
         task.setUser(user);
 
-        // safety
         if (task.getStatus() == null) task.setStatus("pending");
         if (task.getPriority() == null) task.setPriority("low");
+
+        return taskRepo.save(task);
+    }
+
+    // ✅ UPDATE TASK (NEW)
+    public Task updateTask(Long id, Task updatedTask) {
+        Task task = taskRepo.findById(id).orElseThrow();
+
+        task.setTitle(updatedTask.getTitle());
+        task.setDueDate(updatedTask.getDueDate());
+        task.setPriority(updatedTask.getPriority());
 
         return taskRepo.save(task);
     }

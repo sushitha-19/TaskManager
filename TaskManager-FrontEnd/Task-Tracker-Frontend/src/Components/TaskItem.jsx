@@ -1,11 +1,9 @@
-function TaskItem({ task, onDelete, onMarkDone }) {
-  // ✅ HARD SAFETY CHECK
+function TaskItem({ task, onDelete, onMarkDone, onEdit }) {
   if (!task || typeof task !== "object") return null;
 
   const status = task.status || "pending";
   const priority = task.priority || "low";
 
-  // ✅ SAFE DATE HANDLING
   let formattedDate = "No deadline";
 
   if (task.dueDate) {
@@ -49,6 +47,11 @@ function TaskItem({ task, onDelete, onMarkDone }) {
             Completed ✅
           </button>
         )}
+
+        {/* ✅ NEW EDIT BUTTON */}
+        <button onClick={() => onEdit?.(task)}>
+          Edit
+        </button>
 
         <button
           className="delete"

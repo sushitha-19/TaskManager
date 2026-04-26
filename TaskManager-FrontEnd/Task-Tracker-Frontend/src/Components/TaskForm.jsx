@@ -1,47 +1,78 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function TaskForm({ setTasks }) {
+function TaskForm({ setTasks, editingTask, setEditingTask }) {
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [dueTime, setDueTime] = useState("12:00");
   const [priority, setPriority] = useState("low");
 
+  // ✅ PREFILL WHEN EDITING
+  useEffect(() => {
+    if (editingTask) {
+      setTitle(editingTask.title);
+
+      const dt = new Date(editingTask.dueDate);
+      setDueDate(dt.toISOString().split("T")[0]);
+      setDueTime(dt.toTimeString().slice(0, 5));
+
+      setPriority(editingTask.priority);
+    }
+  }, [editingTask]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const user = JSON.parse(localStorage.getItem("user"));
+    const combinedDateTime = `${dueDate}T${dueTime}:00`;
 
-    const combinedDateTime = new Date(`${dueDate}T${dueTime}`);
-
-    const newTask = {
+    const taskData = {
       title,
-      dueDate: combinedDateTime.toISOString().slice(0, 19),
+      dueDate: combinedDateTime,
       priority,
-      status: "pending",
+      status: editingTask ? editingTask.status : "pending",
     };
 
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/tasks/${user.id}`, // ✅ correct API
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newTask),
-        }
-      );
+      let res;
+
+      if (editingTask) {
+        // ✅ UPDATE
+        res = await fetch(
+          `http://localhost:8080/api/tasks/${editingTask.id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(taskData),
+          }
+        );
+      } else {
+        // ✅ CREATE
+        res = await fetch(
+          `http://localhost:8080/api/tasks/${user.id}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(taskData),
+          }
+        );
+      }
 
       if (!res.ok) throw new Error();
 
       const data = await res.json();
 
-      // ✅ Add real DB task
-      setTasks((prev) => [...prev, data]);
+      if (editingTask) {
+        setTasks((prev) =>
+          prev.map((t) => (t.id === data.id ? data : t))
+        );
+        setEditingTask(null);
+      } else {
+        setTasks((prev) => [...prev, data]);
+      }
 
     } catch (err) {
-      console.error("Error:", err);
-      alert("Task creation failed");
+      console.error(err);
+      alert("Operation failed");
     }
 
     setTitle("");
@@ -74,16 +105,15 @@ function TaskForm({ setTasks }) {
         required
       />
 
-      <select
-        value={priority}
-        onChange={(e) => setPriority(e.target.value)}
-      >
+      <select value={priority} onChange={(e) => setPriority(e.target.value)}>
         <option value="low">Low</option>
         <option value="medium">Medium</option>
         <option value="high">High</option>
       </select>
 
-      <button type="submit">Add Task</button>
+      <button type="submit">
+        {editingTask ? "Update Task" : "Add Task"}
+      </button>
     </form>
   );
 }

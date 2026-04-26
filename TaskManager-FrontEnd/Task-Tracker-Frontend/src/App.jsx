@@ -7,11 +7,14 @@ import Signup from "./components/Signup";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import ForgotPassword from "./components/ForgotPassword";
-import Verify from "./components/Verify"; // ✅ NEW
+import Verify from "./components/Verify";
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState("all");
+
+  // ✅ NEW STATE FOR EDIT FEATURE
+  const [editingTask, setEditingTask] = useState(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("user") !== null
@@ -76,7 +79,7 @@ function App() {
         {/* FORGOT PASSWORD */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* ✅ EMAIL VERIFICATION ROUTE */}
+        {/* EMAIL VERIFICATION */}
         <Route path="/verify" element={<Verify />} />
 
         {/* TASK PAGE */}
@@ -87,7 +90,12 @@ function App() {
               <div className="app-container">
                 <h1>Task Tracker 🚀</h1>
 
-                <TaskForm setTasks={setTasks} />
+                {/* ✅ PASS EDIT PROPS */}
+                <TaskForm
+                  setTasks={setTasks}
+                  editingTask={editingTask}
+                  setEditingTask={setEditingTask}
+                />
 
                 <div style={{ margin: "15px" }}>
                   <button onClick={() => setFilter("all")}>All</button>
@@ -95,10 +103,12 @@ function App() {
                   <button onClick={() => setFilter("done")}>Done</button>
                 </div>
 
+                {/* ✅ PASS onEdit */}
                 <TaskList
                   tasks={filteredTasks}
                   onDelete={handleDelete}
                   onMarkDone={handleMarkDone}
+                  onEdit={setEditingTask}
                 />
 
                 <button
