@@ -22,36 +22,40 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
-    // ✅ SIGNUP WITH EMAIL VERIFICATION (SAFE VERSION)
+    // ✅ SIGNUP
     @PostMapping("/signup")
-    public String signup(@RequestBody User user) {
+    public ResponseEntity<?> signup(@RequestBody User user) {
 
         // ✅ Check duplicate email
         if (repo.findByEmail(user.getEmail()).isPresent()) {
-            return "Email already registered. Please login.";
+            return ResponseEntity
+                    .status(400)
+                    .body("Email already registered. Please login.");
         }
 
         try {
-            // ❗ AUTO VERIFY USER
-            user.setVerified(true);
-            user.setVerificationToken(null);
+            // ✅ Generate token
+            String token = UUID.randomUUID().toString();
+
+            user.setVerified(false);
+            user.setVerificationToken(token);
 
             repo.save(user);
 
-            // ✅ OPTIONAL: still send email (you can remove if you want)
+            // ✅ Try sending email (DON'T break if fails)
             try {
-                emailService.sendVerificationEmail(user.getEmail(), "dummy-token");
+                emailService.sendVerificationEmail(user.getEmail(), token);
             } catch (Exception e) {
-                System.out.println("Email failed: " + e.getMessage());
+                System.out.println("Email sending failed: " + e.getMessage());
             }
 
-            return "Signup successful! You can login now.";
+            return ResponseEntity.ok("Verification link sent to your email");
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return "Signup failed: " + e.getMessage();
+            return ResponseEntity.status(500).body("Signup failed");
         }
     }
+
     // ✅ VERIFY EMAIL
     @GetMapping("/verify")
     public String verify(@RequestParam String token) {
@@ -63,9 +67,9 @@ public class AuthController {
             user.setVerified(true);
             user.setVerificationToken(null);
             repo.save(user);
-            return "Email verified successfully!";
+            return "Email verified successfully! You can login now.";
         } else {
-            return "Invalid token";
+            return "Invalid or expired token";
         }
     }
 
@@ -85,12 +89,15 @@ public class AuthController {
             return ResponseEntity.status(400).body("Invalid password");
         }
 
+        // ❗ Remove password before sending
+        u.setPassword(null);
+
         return ResponseEntity.ok(u);
     }
 
     // ✅ FORGOT PASSWORD
     @PutMapping("/forgot-password")
-    public String forgotPassword(@RequestBody User user) {
+    public ResponseEntity<?> forgotPassword(@RequestBody User user) {
 
         Optional<User> existingUser = repo.findByEmail(user.getEmail());
 
@@ -98,9 +105,9 @@ public class AuthController {
             User u = existingUser.get();
             u.setPassword(user.getPassword());
             repo.save(u);
-            return "Password updated successfully";
+            return ResponseEntity.ok("Password updated successfully");
         } else {
-            throw new RuntimeException("User not found");
+            return ResponseEntity.status(400).body("User not found");
         }
     }
 }
