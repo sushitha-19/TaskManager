@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ChatAssistant from "./components/ChatAssistant";
 import "./App.css";
 
 import Login from "./components/Login";
@@ -105,20 +106,18 @@ function App() {
 
                 {/* ✅ PASS onEdit */}
                 <TaskList
-                  tasks={filteredTasks}
-                  onDelete={handleDelete}
-                  onMarkDone={handleMarkDone}
-                  onEdit={setEditingTask}
+                tasks={filteredTasks}
+                onDelete={handleDelete}
+                onMarkDone={handleMarkDone}
+                onEdit={setEditingTask}
                 />
-
+                {/* ✅ ADD CHAT ASSISTANT HERE */}
+                <ChatAssistant />
                 <button
-                  onClick={() => {
-                    localStorage.removeItem("user");
-                    setIsLoggedIn(false);
-                  }}
-                >
-                  Logout
-                </button>
+                onClick={() => {
+                  localStorage.removeItem("user");
+                  setIsLoggedIn(false);
+                  }}>Logout</button>
               </div>
             ) : (
               <Navigate to="/" />

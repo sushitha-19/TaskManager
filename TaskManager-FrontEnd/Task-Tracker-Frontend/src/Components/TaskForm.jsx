@@ -6,7 +6,6 @@ function TaskForm({ setTasks, editingTask, setEditingTask }) {
   const [dueTime, setDueTime] = useState("12:00");
   const [priority, setPriority] = useState("low");
 
-  // ✅ PREFILL WHEN EDITING
   useEffect(() => {
     if (editingTask) {
       setTitle(editingTask.title);
@@ -36,7 +35,6 @@ function TaskForm({ setTasks, editingTask, setEditingTask }) {
       let res;
 
       if (editingTask) {
-        // ✅ UPDATE
         res = await fetch(
           `http://localhost:8080/api/tasks/${editingTask.id}`,
           {
@@ -46,7 +44,6 @@ function TaskForm({ setTasks, editingTask, setEditingTask }) {
           }
         );
       } else {
-        // ✅ CREATE
         res = await fetch(
           `http://localhost:8080/api/tasks/${user.id}`,
           {
@@ -82,7 +79,8 @@ function TaskForm({ setTasks, editingTask, setEditingTask }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="task-form">
+      
       <input
         type="text"
         placeholder="Enter Task"
@@ -105,7 +103,10 @@ function TaskForm({ setTasks, editingTask, setEditingTask }) {
         required
       />
 
-      <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+      <select
+        value={priority}
+        onChange={(e) => setPriority(e.target.value)}
+      >
         <option value="low">Low</option>
         <option value="medium">Medium</option>
         <option value="high">High</option>
@@ -114,6 +115,7 @@ function TaskForm({ setTasks, editingTask, setEditingTask }) {
       <button type="submit">
         {editingTask ? "Update Task" : "Add Task"}
       </button>
+
     </form>
   );
 }

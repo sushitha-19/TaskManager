@@ -20,7 +20,6 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-
   background-color: rgba(255, 255, 255, 0.7);
   z-index: -1;
 }
@@ -32,154 +31,190 @@ h1 {
   font-size: 40px;
 }
 
-/* FORM */
-/*form {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 20px 0;
-  flex-wrap: wrap; 
- }*/
-
-
+/* =========================
+   🔥 GLOBAL INPUTS
+   ========================= */
 input, select {
-  padding: 8px;
+  padding: 8px 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
 }
 
-/* BUTTON */
+input:focus, select:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+/* =========================
+   🔥 BUTTONS
+   ========================= */
 button {
-  padding: 8px 12px;
+  padding: 8px 14px;
   border: none;
-  background-color: #4CAF50;
+  background: linear-gradient(135deg, #4CAF50, #2e7d32);
   color: white;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 14px;
   transition: all 0.2s ease;
 }
 
 button:hover {
-  background-color: #45a049;
-  transform: scale(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* TASK CARD */
+/* =========================
+   🚀 TASK FORM UI
+   ========================= */
+.task-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+
+  margin: 25px auto;
+  padding: 18px 20px;
+
+  background: rgba(255, 255, 255, 0.15);   /* 🔥 transparent */
+  backdrop-filter: blur(12px);            /* 🔥 glass effect */
+  -webkit-backdrop-filter: blur(12px);
+
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+
+  width: fit-content;
+}
+
+/* Make all fields equal height */
+.task-form input,
+.task-form select,
+.task-form button {
+  height: 40px;
+}
+
+/* Bigger task input */
+.task-form input[type="text"] {
+  width: 220px;
+}
+
+/* Button styling */
+.task-form button {
+  padding: 0 18px;
+  font-weight: bold;
+}
+/* =========================
+   ✅ COMPACT TASK CARD
+   ========================= */
 .task-card {
   background-color: white;
-  margin: 15px auto;
-  padding: 15px;
-  width: 60%;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin: 10px auto;
+  padding: 10px 12px;
+  width: 45%;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   text-align: left;
 
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 6px solid gray;
+  border-left: 5px solid gray;
 }
 
-/* Hover effect */
 .task-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+  transform: scale(1.01);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
 }
 
-/* Status border colors */
 .task-card.pending {
-  border-left: 6px solid orange;
+  border-left: 5px solid orange;
 }
 
 .task-card.done {
-  border-left: 6px solid green;
+  border-left: 5px solid green;
 }
 
-/* Header inside card */
+/* Header */
 .task-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.task-header h3 {
+  font-size: 18px;
+  margin: 0;
+  color: black !important;
+}
+
+/* Text */
+.task-card p {
+  font-size: 14px;
+  margin: 4px 0;
+  color: black;
+}
+
 /* Badge */
 .badge {
-  padding: 5px 10px;
-  border-radius: 20px;
-  color: white;
-  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: bold;
 }
 
 .badge.pending {
-  background-color: #ff9800; /* darker orange */
-  color: black;              /* 👈 key fix */
-  font-weight: bold;
+  background-color: #ff9800;
+  color: black;
 }
 
 .badge.done {
-  background-color: #e8f5e9; /* light green */
-  color: #2e7d32;            /* dark green text */
-  font-weight: bold;
-}
-
-/* Overdue */
-.overdue {
-  background-color: #ffe6e6;
+  background-color: #e8f5e9;
+  color: #2e7d32;
 }
 
 /* Priority */
 .priority {
+  font-size: 13px;
   font-weight: bold;
 }
 
-.priority.high {
-  color: red;
-}
-
-.priority.medium {
-  color: goldenrod;
-}
-
-.priority.low {
-  color: green;
-}
-
-/* Status text (fallback) */
-.done {
-  color: green;
-  font-weight: bold;
-}
-
-.pending {
-  color: orange;
-  font-weight: bold;
-}
+.priority.high { color: red; }
+.priority.medium { color: goldenrod; }
+.priority.low { color: green; }
 
 /* Buttons */
 .btn-group {
-  margin-top: 10px;
+  margin-top: 8px;
+  display: flex;
+  gap: 6px;
 }
 
 .delete {
-  background-color: red;
-  margin-left: 10px;
+  background: red;
 }
 
 .delete:hover {
-  background-color: darkred;
+  background: darkred;
 }
 
-/* Disabled button */
 .done-btn {
-  background-color: gray;
+  background: gray;
   cursor: not-allowed;
 }
 
-/* Empty state */
+/* Empty */
 .empty {
   text-align: center;
   margin-top: 30px;
-  font-size: 20px;
+  font-size: 18px;
   color: #555;
 }
+
+/* Layout */
 .app-container {
   text-align: center;
 }
@@ -188,117 +223,137 @@ button:hover {
   margin-top: 20px;
   color: #00e6e6;
   text-shadow: 2px 2px 8px black;
-  font-size: 42px;
-  letter-spacing: 1px;
-}
-/* Active Filter Button */
-.active-filter {
-  background-color: #00c6ff;
-  color: white;
-  font-weight: bold;
-  transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
+  font-size: 38px;
 }
 
-/* Optional: smoother transition */
-button {
-  transition: all 0.3s ease;
+/* Filter */
+.active-filter {
+  background-color: #00c6ff;
+  transform: scale(1.05);
 }
+
+/* =========================
+   AUTH
+   ========================= */
 .center-box {
   text-align: center;
   margin-top: 100px;
   background-color: white;
-  padding: 30px;
+  padding: 25px;
   width: 300px;
   margin-left: auto;
   margin-right: auto;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  position: relative;
-  z-index: 1;
 }
 
-/* ✅ FIX: Make task title BLACK */
-.task-card h3 {
-  color: black !important;
-}
-
-/* ✅ FIX: Make ALL text inside task-card default black */
-.task-card p {
-  color: black;
-}
-
-/* Optional: keep priority colors as you already have */
-.priority.high {
-  color: red;
-}
-
-.priority.medium {
-  color: goldenrod;
-}
-
-.priority.low {
-  color: green;
-}
-
-/* ✅ TASK FORM ONLY (if you have task form) */
-.task-form {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* ✅ LOGIN + SIGNUP FIX */
 .center-box form {
   display: flex;
-  flex-direction: column;   /* 👈 KEY FIX */
+  flex-direction: column;
   gap: 12px;
-  align-items: stretch;
 }
 
-/* inputs full width */
 .center-box input {
   width: 100%;
   padding: 10px;
-  box-sizing: border-box;
 }
 
-/* buttons full width */
 .center-box button {
   width: 100%;
 }
-/* ✅ AUTH LINKS (Signup + Forgot Password) */
-.auth-links {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
-}
 
-/* remove button look completely */
-.auth-links span {
-  color: #007bff;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-/* hover effect */
-.auth-links span:hover {
-  text-decoration: underline;
-  color: #0056b3;
-}
-/* Signup page specific fix */
-/* DEFAULT (used by signup - center aligned) */
 .auth-links {
   display: flex;
   justify-content: center;
   margin-top: 15px;
 }
 
-/* ✅ ONLY for Login & Forgot pages */
 .login-links {
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+/* =========================
+   CHAT UI
+   ========================= */
+
+.chat-box {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 320px;
+  height: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.chat-box h3 {
+  background: linear-gradient(135deg, #4CAF50, #2e7d32);
+  color: white;
+  margin: 0;
+  padding: 12px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background: #f7f9fb;
+}
+
+.msg {
+  margin-bottom: 10px;
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.msg.user {
+  margin-left: auto;
+  background: #4CAF50;
+  color: white;
+}
+
+.msg.bot {
+  margin-right: auto;
+  background: #e4e6eb;
+}
+
+.chat-input-area {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+.chat-box input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+}
+
+.chat-box button {
+  padding: 10px 14px;
+}
+
+.chat-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #1e293b;
+  color: #ffffff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
