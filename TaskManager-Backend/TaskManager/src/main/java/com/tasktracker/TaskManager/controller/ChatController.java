@@ -3,6 +3,7 @@ package com.tasktracker.TaskManager.controller;
 import com.tasktracker.TaskManager.model.Task;
 import com.tasktracker.TaskManager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,7 +17,8 @@ public class ChatController {
     @Autowired
     private TaskService taskService;
 
-    private final String GEMINI_API_KEY = "AIzaSyAq3cAq0YAN3hq94opDIaRBmkA_R1Se-xc";
+    @Value("${gemini.api.key}")
+    private String GEMINI_API_KEY;
 
     @PostMapping
     public String chat(@RequestBody Map<String, String> request) {
@@ -78,7 +80,7 @@ public class ChatController {
             } catch (Exception e) {
                 System.out.println("❌ Gemini API call failed:");
                 e.printStackTrace();
-                return "AI service error: check backend logs";
+                return "AI is currently busy, trying again ....";
             }
 
             // ================= VALIDATE =================

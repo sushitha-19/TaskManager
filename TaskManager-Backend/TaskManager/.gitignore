@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+# Secrets / Config
+.env
+.env.*
+application.properties
+application.yml
+
+# OS files (optional but good)
+.DS_Store
+Thumbs.db
